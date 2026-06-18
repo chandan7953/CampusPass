@@ -10,6 +10,8 @@ const morgan = require("morgan");
 const connectDB = require("./configs/db");
 
 const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+
 
 
 const errorHandler = require("./middlewares/errorHandler");
@@ -49,6 +51,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+
+app.use("/api/users", userRoutes);
 
 
 
