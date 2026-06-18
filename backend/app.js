@@ -19,7 +19,7 @@ const reviewRoutes = require("./routes/reviewRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 
 const bookingRoutes = require("./routes/bookingRoutes");
-
+const adminRoutes = require("./routes/adminRoutes");
 const errorHandler = require("./middlewares/errorHandler");
 const organizerRoutes = require("./routes/organizerRoutes");
 
@@ -78,6 +78,7 @@ app.use("/api/bookings", bookingRoutes);
 
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/admin", adminRoutes);
 
 
 app.use((req, res) => {
