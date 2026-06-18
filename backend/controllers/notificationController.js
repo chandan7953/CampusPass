@@ -3,10 +3,6 @@ const Notification = require("../models/Notification");
 const ApiResponse = require("../utils/ApiResponse");
 const ApiError = require("../utils/ApiError");
 
-// ======================
-// GET USER NOTIFICATIONS
-// ======================
-
 const getNotifications = async (req, res, next) => {
   try {
     const notifications = await Notification.find({
@@ -29,10 +25,6 @@ const getNotifications = async (req, res, next) => {
   }
 };
 
-// ======================
-// MARK AS READ
-// ======================
-
 const markAsRead = async (req, res, next) => {
   try {
     const notification = await Notification.findById(req.params.id);
@@ -52,10 +44,6 @@ const markAsRead = async (req, res, next) => {
     next(error);
   }
 };
-
-// ======================
-// MARK ALL AS READ
-// ======================
 
 const markAllAsRead = async (req, res, next) => {
   try {
@@ -77,10 +65,6 @@ const markAllAsRead = async (req, res, next) => {
   }
 };
 
-// ======================
-// DELETE NOTIFICATION
-// ======================
-
 const deleteNotification = async (req, res, next) => {
   try {
     const notification = await Notification.findById(req.params.id);
@@ -98,10 +82,6 @@ const deleteNotification = async (req, res, next) => {
     next(error);
   }
 };
-
-// ======================
-// UNREAD COUNT
-// ======================
 
 const getUnreadCount = async (req, res, next) => {
   try {
