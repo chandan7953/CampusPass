@@ -16,7 +16,6 @@ const verifyToken = require("../middlewares/verifyToken");
 
 const authorizeRole = require("../middlewares/authorizeRole");
 
-// Student Routes
 
 router.post("/", verifyToken, createBooking);
 
@@ -30,7 +29,6 @@ router.get("/:id/download", verifyToken, downloadTicket);
 
 router.get("/:id/qr", verifyToken, getQRCode);
 
-// Organizer/Admin Routes
 
 router.patch(
   "/:id/confirm",

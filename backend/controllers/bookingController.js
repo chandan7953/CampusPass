@@ -9,9 +9,6 @@ const generateBookingCode = require("../utils/generateBookingCode");
 
 const { generateQRCode } = require("../services/qrService");
 
-// ======================
-// CREATE BOOKING
-// ======================
 
 const createBooking = async (req, res, next) => {
   try {
@@ -75,9 +72,6 @@ const createBooking = async (req, res, next) => {
   }
 };
 
-// ======================
-// CONFIRM BOOKING
-// ======================
 
 const confirmBooking = async (req, res, next) => {
   try {
@@ -99,9 +93,6 @@ const confirmBooking = async (req, res, next) => {
   }
 };
 
-// ======================
-// CANCEL BOOKING
-// ======================
 
 const cancelBooking = async (req, res, next) => {
   try {
@@ -135,9 +126,7 @@ const cancelBooking = async (req, res, next) => {
   }
 };
 
-// ======================
-// GET BOOKING DETAILS
-// ======================
+
 
 const getBookingDetails = async (req, res, next) => {
   try {
@@ -158,9 +147,7 @@ const getBookingDetails = async (req, res, next) => {
   }
 };
 
-// ======================
-// MY BOOKINGS
-// ======================
+
 
 const getMyBookings = async (req, res, next) => {
   try {
@@ -176,9 +163,7 @@ const getMyBookings = async (req, res, next) => {
   }
 };
 
-// ======================
-// DOWNLOAD TICKET
-// ======================
+
 
 const downloadTicket = async (req, res, next) => {
   try {
@@ -199,9 +184,6 @@ const downloadTicket = async (req, res, next) => {
   }
 };
 
-// ======================
-// GET QR CODE
-// ======================
 
 const getQRCode = async (req, res, next) => {
   try {
