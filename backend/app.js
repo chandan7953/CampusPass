@@ -15,7 +15,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const venueRoutes = require("./routes/venueRoutes");
 const eventRoutes = require("./routes/eventRoutes.");
 const ticketRoutes = require("./routes/ticketRoutes");
-
+const reviewRoutes = require("./routes/reviewRoutes");
 const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
@@ -63,6 +63,8 @@ app.use("/api/venues", venueRoutes);
 app.use("/api/events", eventRoutes);
 
 app.use("/api/tickets", ticketRoutes);
+
+app.use("/api/reviews", reviewRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
