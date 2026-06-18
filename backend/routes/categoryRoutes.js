@@ -16,13 +16,9 @@ const authorizeRole = require("../middlewares/authorizeRole");
 
 const upload = require("../configs/multer");
 
-// Public Routes
-
 router.get("/", getAllCategories);
 
 router.get("/:id", getCategoryById);
-
-// Admin Routes
 
 router.post(
   "/",
