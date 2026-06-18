@@ -11,8 +11,7 @@ const connectDB = require("./configs/db");
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
-
-
+const categoryRoutes = require("./routes/categoryRoutes");
 
 const errorHandler = require("./middlewares/errorHandler");
 
@@ -54,7 +53,7 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/users", userRoutes);
 
-
+app.use("/api/categories", categoryRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
