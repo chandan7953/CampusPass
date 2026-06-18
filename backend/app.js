@@ -12,6 +12,7 @@ const connectDB = require("./configs/db");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
+const venueRoutes = require("./routes/venueRoutes");
 
 const errorHandler = require("./middlewares/errorHandler");
 
@@ -55,6 +56,8 @@ app.use("/api/users", userRoutes);
 
 app.use("/api/categories", categoryRoutes);
 
+app.use("/api/venues", venueRoutes);
+
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -62,7 +65,7 @@ app.use((req, res) => {
   });
 });
 
-app.use(errorHandler);
+app.use(errorHandler); 
 
 const PORT = process.env.PORT || 5000;
 
