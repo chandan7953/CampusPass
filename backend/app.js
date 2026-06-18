@@ -15,10 +15,11 @@ const app = express();
 
 connectDB();
 
+// Routes
 const authRoutes = require("./routes/authRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 
 
-app.use("/api/auth", authRoutes);
 
 app.use(
   cors({
@@ -42,6 +43,15 @@ app.use(
 );
 
 app.use(cookieParser());
+
+// ==========================
+// ROUTES
+// ==========================
+
+
+app.use("/api/auth", authRoutes);
+
+app.use("/api/reviews", reviewRoutes);
 
 
 const PORT = process.env.PORT || 5000;

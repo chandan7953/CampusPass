@@ -1,0 +1,321 @@
+const Review = require("../models/Review");
+const Event = require("../models/Event");
+const Booking = require("../models/Booking");
+
+const ApiResponse = require("../utils/ApiResponse");
+const ApiError = require("../utils/ApiError");
+
+
+// ======================
+// ADD REVIEW
+// ======================
+
+const addReview = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const {
+      eventId,
+      rating,
+      comment,
+    } = req.body;
+
+    const event =
+      await Event.findById(
+        eventId
+      );
+
+    if (!event) {
+      throw new ApiError(
+        404,
+        "Event not found"
+      );
+    }
+
+    const booking =
+      await Booking.findOne({
+        userId: req.user.id,
+        eventId,
+        bookingStatus:
+          "confirmed",
+      });
+
+    if (!booking) {
+      throw new ApiError(
+        403,
+        "You can review only attended events"
+      );
+    }
+
+    const existingReview =
+      await Review.findOne({
+        userId: req.user.id,
+        eventId,
+      });
+
+    if (existingReview) {
+      throw new ApiError(
+        400,
+        "Review already submitted"
+      );
+    }
+
+    const review =
+      await Review.create({
+        userId: req.user.id,
+        eventId,
+        rating,
+        comment,
+      });
+
+    res.status(201).json(
+      new ApiResponse(
+        201,
+        "Review added successfully",
+        review
+      )
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+// ======================
+// UPDATE REVIEW
+// ======================
+
+const updateReview = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const review =
+      await Review.findById(
+        req.params.id
+      );
+
+    if (!review) {
+      throw new ApiError(
+        404,
+        "Review not found"
+      );
+    }
+
+    if (
+      review.userId.toString() !==
+      req.user.id
+    ) {
+      throw new ApiError(
+        403,
+        "Unauthorized"
+      );
+    }
+
+    review.rating =
+      req.body.rating ||
+      review.rating;
+
+    review.comment =
+      req.body.comment ||
+      review.comment;
+
+    await review.save();
+
+    res.status(200).json(
+      new ApiResponse(
+        200,
+        "Review updated successfully",
+        review
+      )
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+// ======================
+// DELETE REVIEW
+// ======================
+
+const deleteReview = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const review =
+      await Review.findById(
+        req.params.id
+      );
+
+    if (!review) {
+      throw new ApiError(
+        404,
+        "Review not found"
+      );
+    }
+
+    if (
+      review.userId.toString() !==
+        req.user.id &&
+      req.user.role !== "admin"
+    ) {
+      throw new ApiError(
+        403,
+        "Unauthorized"
+      );
+    }
+
+    await Review.findByIdAndDelete(
+      req.params.id
+    );
+
+    res.status(200).json(
+      new ApiResponse(
+        200,
+        "Review deleted successfully"
+      )
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+// ======================
+// GET EVENT REVIEWS
+// ======================
+
+const getEventReviews =
+  async (
+    req,
+    res,
+    next
+  ) => {
+    try {
+      const reviews =
+        await Review.find({
+          eventId:
+            req.params.eventId,
+        })
+          .populate(
+            "userId",
+            "fullName profileImage"
+          )
+          .sort({
+            createdAt: -1,
+          });
+
+      res.status(200).json(
+        new ApiResponse(
+          200,
+          "Reviews fetched successfully",
+          reviews
+        )
+      );
+    } catch (error) {
+      next(error);
+    }
+  };
+
+
+// ======================
+// GET MY REVIEWS
+// ======================
+
+const getMyReviews =
+  async (
+    req,
+    res,
+    next
+  ) => {
+    try {
+      const reviews =
+        await Review.find({
+          userId:
+            req.user.id,
+        })
+          .populate(
+            "eventId",
+            "title poster"
+          )
+          .sort({
+            createdAt: -1,
+          });
+
+      res.status(200).json(
+        new ApiResponse(
+          200,
+          "My reviews fetched",
+          reviews
+        )
+      );
+    } catch (error) {
+      next(error);
+    }
+  };
+
+
+// ======================
+// GET EVENT RATING
+// ======================
+
+const getEventRating =
+  async (
+    req,
+    res,
+    next
+  ) => {
+    try {
+      const reviews =
+        await Review.find({
+          eventId:
+            req.params.eventId,
+        });
+
+      const totalReviews =
+        reviews.length;
+
+      const averageRating =
+        totalReviews === 0
+          ? 0
+          : reviews.reduce(
+              (sum, review) =>
+                sum +
+                review.rating,
+              0
+            ) / totalReviews;
+
+      res.status(200).json(
+        new ApiResponse(
+          200,
+          "Rating fetched successfully",
+          {
+            averageRating:
+              Number(
+                averageRating.toFixed(
+                  1
+                )
+              ),
+            totalReviews,
+          }
+        )
+      );
+    } catch (error) {
+      next(error);
+    }
+  };
+
+module.exports = {
+  addReview,
+  updateReview,
+  deleteReview,
+  getEventReviews,
+  getMyReviews,
+  getEventRating,
+};
