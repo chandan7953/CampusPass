@@ -15,7 +15,10 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const venueRoutes = require("./routes/venueRoutes");
 const eventRoutes = require("./routes/eventRoutes.");
 const ticketRoutes = require("./routes/ticketRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
+
 const bookingRoutes = require("./routes/bookingRoutes");
+
 
 const errorHandler = require("./middlewares/errorHandler");
 
@@ -65,7 +68,11 @@ app.use("/api/events", eventRoutes);
 
 app.use("/api/tickets", ticketRoutes);
 
+
+app.use("/api/reviews", reviewRoutes);
+
 app.use("/api/bookings", bookingRoutes);
+
 
 app.use((req, res) => {
   res.status(404).json({
