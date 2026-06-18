@@ -9,17 +9,13 @@ const morgan = require("morgan");
 
 const connectDB = require("./configs/db.js");
 
-
-
 const app = express();
 
 connectDB();
 
-// Routes
 const authRoutes = require("./routes/authRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
-
-
+const ticketRoutes = require("./routes/ticketRoutes");
 
 app.use(
   cors({
@@ -44,15 +40,11 @@ app.use(
 
 app.use(cookieParser());
 
-// ==========================
-// ROUTES
-// ==========================
-
-
 app.use("/api/auth", authRoutes);
 
 app.use("/api/reviews", reviewRoutes);
 
+app.use("/api/tickets", ticketRoutes);
 
 const PORT = process.env.PORT || 5000;
 
