@@ -1,67 +1,45 @@
 const express = require("express");
 
-const router =
-    express.Router();
+const router = express.Router();
 
 const {
-    createCategory,
-    updateCategory,
-    deleteCategory,
-    getAllCategories,
-    getCategoryById,
-} = require(
-    "../controllers/categoryController"
-);
+  createCategory,
+  updateCategory,
+  deleteCategory,
+  getAllCategories,
+  getCategoryById,
+} = require("../controllers/categoryController");
 
-const verifyToken = require(
-    "../middlewares/verifyToken"
-);
+const verifyToken = require("../middlewares/verifyToken");
 
-const authorizeRole = require(
-    "../middlewares/authorizeRole"
-);
+const authorizeRole = require("../middlewares/authorizeRole");
 
-const upload = require(
-    "../configs/multer"
-);
-
+const upload = require("../configs/multer");
 
 // Public Routes
 
-router.get(
-    "/",
-    getAllCategories
-);
+router.get("/", getAllCategories);
 
-router.get(
-    "/:id",
-    getCategoryById
-);
-
+router.get("/:id", getCategoryById);
 
 // Admin Routes
 
 router.post(
-    "/",
-    verifyToken,
-    authorizeRole("admin"),
-    upload.single("icon"),
-    createCategory
+  "/",
+  verifyToken,
+  authorizeRole("admin"),
+  upload.single("icon"),
+  createCategory,
 );
 
 router.put(
-    "/:id",
-    verifyToken,
-    authorizeRole("admin"),
-    upload.single("icon"),
-    updateCategory
+  "/:id",
+  verifyToken,
+  authorizeRole("admin"),
+  upload.single("icon"),
+  updateCategory,
 );
 
-router.delete(
-    "/:id",
-    verifyToken,
-    authorizeRole("admin"),
-    deleteCategory
-);
+router.delete("/:id", verifyToken, authorizeRole("admin"), deleteCategory);
 
 module.exports = router;
