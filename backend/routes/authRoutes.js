@@ -14,7 +14,6 @@ const {
 
 const verifyToken = require("../middlewares/verifyToken");
 
-// Public Routes
 
 router.post("/register", registerUser);
 
@@ -28,7 +27,6 @@ router.post("/forgot-password", forgotPassword);
 
 router.post("/reset-password", resetPassword);
 
-// Protected Route
 
 router.get("/me", verifyToken, getCurrentUser);
 

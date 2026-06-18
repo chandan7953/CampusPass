@@ -84,7 +84,6 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-
 const sendOTP = async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -117,7 +116,6 @@ const sendOTP = async (req, res, next) => {
   }
 };
 
-
 const verifyOTP = async (req, res, next) => {
   try {
     const { email, otp } = req.body;
@@ -148,10 +146,6 @@ const verifyOTP = async (req, res, next) => {
   }
 };
 
-// ======================
-// FORGOT PASSWORD
-// ======================
-
 const forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -179,10 +173,6 @@ const forgotPassword = async (req, res, next) => {
     next(error);
   }
 };
-
-// ======================
-// RESET PASSWORD
-// ======================
 
 const resetPassword = async (req, res, next) => {
   try {
@@ -214,17 +204,11 @@ const resetPassword = async (req, res, next) => {
   }
 };
 
-// ======================
-// CURRENT USER
-// ======================
-
 const getCurrentUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
 
-    res
-      .status(200)
-      .json(apiResponse(200, "User fetched successfully", user));
+    res.status(200).json(apiResponse(200, "User fetched successfully", user));
   } catch (error) {
     next(error);
   }
