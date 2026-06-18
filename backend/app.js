@@ -21,6 +21,7 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 
 const errorHandler = require("./middlewares/errorHandler");
+const organizerRoutes = require("./routes/organizerRoutes");
 
 const app = express();
 
@@ -70,8 +71,14 @@ app.use("/api/tickets", ticketRoutes);
 
 app.use("/api/reviews", reviewRoutes);
 
+
+app.use("/api/organizer", organizerRoutes);
+
+app.use("/api/bookings", bookingRoutes);
+
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/notifications", notificationRoutes);
+
 
 app.use((req, res) => {
   res.status(404).json({
