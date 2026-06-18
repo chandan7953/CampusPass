@@ -19,7 +19,7 @@ const reviewRoutes = require("./routes/reviewRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 
 const bookingRoutes = require("./routes/bookingRoutes");
-
+const adminRoutes = require("./routes/adminRoutes");
 const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
@@ -72,6 +72,7 @@ app.use("/api/reviews", reviewRoutes);
 
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
