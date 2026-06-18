@@ -12,8 +12,6 @@ const {
 
 const verifyToken = require("../middlewares/verifyToken");
 
-// All Routes Protected
-
 router.get("/", verifyToken, getNotifications);
 
 router.get("/unread-count", verifyToken, getUnreadCount);
