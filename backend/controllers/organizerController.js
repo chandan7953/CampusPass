@@ -2,7 +2,7 @@ const Event = require("../models/Event");
 const Booking = require("../models/Booking");
 const Payment = require("../models/Payment");
 
-const ApiResponse = require("../utils/ApiResponse");
+const apiResponse = require("../utils/apiResponse");
 const ApiError = require("../utils/ApiError");
 
 const getDashboardStats = async (req, res, next) => {
@@ -37,7 +37,7 @@ const getDashboardStats = async (req, res, next) => {
     const revenue = revenueData[0]?.totalRevenue || 0;
 
     res.status(200).json(
-      new ApiResponse(200, "Dashboard stats fetched", {
+      apiResponse(200, "Dashboard stats fetched", {
         totalEvents: events,
         totalBookings: bookings,
         totalRevenue: revenue,
@@ -59,7 +59,7 @@ const getRevenueStats = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Revenue stats fetched", revenue));
+      .json(apiResponse(200, "Revenue stats fetched", revenue));
   } catch (error) {
     next(error);
   }
@@ -74,7 +74,7 @@ const getAttendees = async (req, res, next) => {
       .populate("userId", "fullName email mobile")
       .populate("ticketId");
 
-    res.status(200).json(new ApiResponse(200, "Attendees fetched", attendees));
+    res.status(200).json(apiResponse(200, "Attendees fetched", attendees));
   } catch (error) {
     next(error);
   }
@@ -104,7 +104,7 @@ const scanTicket = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Ticket verified successfully", booking));
+      .json(apiResponse(200, "Ticket verified successfully", booking));
   } catch (error) {
     next(error);
   }
@@ -119,7 +119,7 @@ const exportAttendees = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Attendee export data", attendees));
+      .json(apiResponse(200, "Attendee export data", attendees));
   } catch (error) {
     next(error);
   }
@@ -145,7 +145,7 @@ const getEventAnalytics = async (req, res, next) => {
       }),
     );
 
-    res.status(200).json(new ApiResponse(200, "Analytics fetched", analytics));
+    res.status(200).json(apiResponse(200, "Analytics fetched", analytics));
   } catch (error) {
     next(error);
   }

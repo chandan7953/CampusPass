@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema(
 
     department: String,
 
-    year: Number,
+    year: String,
 
     favorites: [
       {

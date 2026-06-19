@@ -1,6 +1,6 @@
 const Notification = require("../models/Notification");
 
-const ApiResponse = require("../utils/ApiResponse");
+const apiResponse = require("../utils/apiResponse");
 const ApiError = require("../utils/ApiError");
 
 const getNotifications = async (req, res, next) => {
@@ -14,7 +14,7 @@ const getNotifications = async (req, res, next) => {
     res
       .status(200)
       .json(
-        new ApiResponse(
+        apiResponse(
           200,
           "Notifications fetched successfully",
           notifications,
@@ -39,7 +39,7 @@ const markAsRead = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Notification marked as read", notification));
+      .json(apiResponse(200, "Notification marked as read", notification));
   } catch (error) {
     next(error);
   }
@@ -59,7 +59,7 @@ const markAllAsRead = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "All notifications marked as read"));
+      .json(apiResponse(200, "All notifications marked as read"));
   } catch (error) {
     next(error);
   }
@@ -77,7 +77,7 @@ const deleteNotification = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Notification deleted successfully"));
+      .json(apiResponse(200, "Notification deleted successfully"));
   } catch (error) {
     next(error);
   }
@@ -92,7 +92,7 @@ const getUnreadCount = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Unread count fetched", { count }));
+      .json(apiResponse(200, "Unread count fetched", { count }));
   } catch (error) {
     next(error);
   }

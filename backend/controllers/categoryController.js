@@ -1,6 +1,6 @@
 const Category = require("../models/Category");
 
-const ApiResponse = require("../utils/ApiResponse");
+const apiResponse = require("../utils/apiResponse");
 const ApiError = require("../utils/ApiError");
 
 const { uploadToCloudinary } = require("../services/cloudinaryService");
@@ -33,7 +33,7 @@ const createCategory = async (req, res, next) => {
 
     res
       .status(201)
-      .json(new ApiResponse(201, "Category created successfully", category));
+      .json(apiResponse(201, "Category created successfully", category));
   } catch (error) {
     next(error);
   }
@@ -67,7 +67,7 @@ const updateCategory = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Category updated successfully", category));
+      .json(apiResponse(200, "Category updated successfully", category));
   } catch (error) {
     next(error);
   }
@@ -85,7 +85,7 @@ const deleteCategory = async (req, res, next) => {
 
     await Category.findByIdAndDelete(id);
 
-    res.status(200).json(new ApiResponse(200, "Category deleted successfully"));
+    res.status(200).json(apiResponse(200, "Category deleted successfully"));
   } catch (error) {
     next(error);
   }
@@ -100,7 +100,7 @@ const getAllCategories = async (req, res, next) => {
     res
       .status(200)
       .json(
-        new ApiResponse(200, "Categories fetched successfully", categories),
+        apiResponse(200, "Categories fetched successfully", categories),
       );
   } catch (error) {
     next(error);
@@ -117,7 +117,7 @@ const getCategoryById = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Category fetched successfully", category));
+      .json(apiResponse(200, "Category fetched successfully", category));
   } catch (error) {
     next(error);
   }

@@ -3,7 +3,7 @@ const Event = require("../models/Event");
 const Booking = require("../models/Booking");
 const Payment = require("../models/Payment");
 
-const ApiResponse = require("../utils/ApiResponse");
+const apiResponse = require("../utils/apiResponse");
 const ApiError = require("../utils/ApiError");
 
 
@@ -46,7 +46,7 @@ const getDashboardStats = async (
         ?.totalRevenue || 0;
 
     res.status(200).json(
-      new ApiResponse(
+      apiResponse(
         200,
         "Dashboard stats fetched",
         {
@@ -79,7 +79,7 @@ const getAllUsers = async (
         });
 
     res.status(200).json(
-      new ApiResponse(
+      apiResponse(
         200,
         "Users fetched successfully",
         users
@@ -112,7 +112,7 @@ const getUserById = async (
     }
 
     res.status(200).json(
-      new ApiResponse(
+      apiResponse(
         200,
         "User fetched successfully",
         user
@@ -151,7 +151,7 @@ const blockUser = async (
     }
 
     res.status(200).json(
-      new ApiResponse(
+      apiResponse(
         200,
         "User blocked successfully",
         user
@@ -192,7 +192,7 @@ const unblockUser =
       }
 
       res.status(200).json(
-        new ApiResponse(
+        apiResponse(
           200,
           "User unblocked successfully",
           user
@@ -227,7 +227,7 @@ const getAllEvents =
           });
 
       res.status(200).json(
-        new ApiResponse(
+        apiResponse(
           200,
           "Events fetched successfully",
           events
@@ -270,7 +270,7 @@ const approveEvent =
       }
 
       res.status(200).json(
-        new ApiResponse(
+        apiResponse(
           200,
           "Event approved successfully",
           event
@@ -311,7 +311,7 @@ const rejectEvent =
       }
 
       res.status(200).json(
-        new ApiResponse(
+        apiResponse(
           200,
           "Event rejected successfully",
           event
@@ -349,7 +349,7 @@ const deleteEvent =
       );
 
       res.status(200).json(
-        new ApiResponse(
+        apiResponse(
           200,
           "Event deleted successfully"
         )
@@ -380,7 +380,7 @@ const getAllPayments =
           });
 
       res.status(200).json(
-        new ApiResponse(
+        apiResponse(
           200,
           "Payments fetched successfully",
           payments
@@ -415,7 +415,7 @@ const getAllBookings =
           });
 
       res.status(200).json(
-        new ApiResponse(
+        apiResponse(
           200,
           "Bookings fetched successfully",
           bookings
