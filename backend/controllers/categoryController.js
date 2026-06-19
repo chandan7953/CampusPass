@@ -99,9 +99,7 @@ const getAllCategories = async (req, res, next) => {
 
     res
       .status(200)
-      .json(
-        apiResponse(200, "Categories fetched successfully", categories),
-      );
+      .json(apiResponse(200, "Categories fetched successfully", categories));
   } catch (error) {
     next(error);
   }
