@@ -19,14 +19,16 @@ const createEvent = async (req, res, next) => {
       capacity,
     } = req.body;
 
-    const categoryExists = await Category.findById(category);
-
+const categoryExists = await Category.find({
+  _id: category,
+});
     if (!categoryExists) {
       throw new ApiError(404, "Category not found");
     }
 
-    const venueExists = await Venue.findById(venue);
-
+    const venueExists = await Venue.find({
+  _id: venue,
+});
     if (!venueExists) {
       throw new ApiError(404, "Venue not found");
     }
