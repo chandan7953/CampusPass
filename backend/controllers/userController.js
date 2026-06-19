@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const Booking = require("../models/Booking");
 
-const ApiResponse = require("../utils/ApiResponse");
+const apiResponse = require("../utils/apiResponse");
 const ApiError = require("../utils/ApiError");
 
 const { uploadToCloudinary } = require("../services/cloudinaryService");
@@ -14,7 +14,7 @@ const getProfile = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Profile fetched successfully", user));
+      .json(apiResponse(200, "Profile fetched successfully", user));
   } catch (error) {
     next(error);
   }
@@ -39,7 +39,7 @@ const updateProfile = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Profile updated successfully", user));
+      .json(apiResponse(200, "Profile updated successfully", user));
   } catch (error) {
     next(error);
   }
@@ -61,7 +61,7 @@ const changePassword = async (req, res, next) => {
 
     await user.save();
 
-    res.status(200).json(new ApiResponse(200, "Password changed successfully"));
+    res.status(200).json(apiResponse(200, "Password changed successfully"));
   } catch (error) {
     next(error);
   }
@@ -85,7 +85,7 @@ const uploadProfileImage = async (req, res, next) => {
       },
     ).select("-password");
 
-    res.status(200).json(new ApiResponse(200, "Profile image uploaded", user));
+    res.status(200).json(apiResponse(200, "Profile image uploaded", user));
   } catch (error) {
     next(error);
   }
@@ -103,7 +103,7 @@ const addFavorite = async (req, res, next) => {
       await user.save();
     }
 
-    res.status(200).json(new ApiResponse(200, "Added to favorites"));
+    res.status(200).json(apiResponse(200, "Added to favorites"));
   } catch (error) {
     next(error);
   }
@@ -119,7 +119,7 @@ const removeFavorite = async (req, res, next) => {
 
     await user.save();
 
-    res.status(200).json(new ApiResponse(200, "Favorite removed"));
+    res.status(200).json(apiResponse(200, "Favorite removed"));
   } catch (error) {
     next(error);
   }
@@ -131,7 +131,7 @@ const getFavorites = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Favorites fetched", user.favorites));
+      .json(apiResponse(200, "Favorites fetched", user.favorites));
   } catch (error) {
     next(error);
   }
@@ -145,7 +145,7 @@ const getMyBookings = async (req, res, next) => {
       .populate("eventId")
       .populate("ticketId");
 
-    res.status(200).json(new ApiResponse(200, "Bookings fetched", bookings));
+    res.status(200).json(apiResponse(200, "Bookings fetched", bookings));
   } catch (error) {
     next(error);
   }

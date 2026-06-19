@@ -2,7 +2,7 @@ const Booking = require("../models/Booking");
 const Ticket = require("../models/Ticket");
 const Event = require("../models/Event");
 
-const ApiResponse = require("../utils/ApiResponse");
+const apiResponse = require("../utils/apiResponse");
 const ApiError = require("../utils/ApiError");
 
 const generateBookingCode = require("../utils/generateBookingCode");
@@ -66,7 +66,7 @@ const createBooking = async (req, res, next) => {
 
     res
       .status(201)
-      .json(new ApiResponse(201, "Booking created successfully", booking));
+      .json(apiResponse(201, "Booking created successfully", booking));
   } catch (error) {
     next(error);
   }
@@ -87,7 +87,7 @@ const confirmBooking = async (req, res, next) => {
 
     await booking.save();
 
-    res.status(200).json(new ApiResponse(200, "Booking confirmed", booking));
+    res.status(200).json(apiResponse(200, "Booking confirmed", booking));
   } catch (error) {
     next(error);
   }
@@ -120,7 +120,7 @@ const cancelBooking = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Booking cancelled successfully"));
+      .json(apiResponse(200, "Booking cancelled successfully"));
   } catch (error) {
     next(error);
   }
@@ -141,7 +141,7 @@ const getBookingDetails = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Booking details fetched", booking));
+      .json(apiResponse(200, "Booking details fetched", booking));
   } catch (error) {
     next(error);
   }
@@ -157,7 +157,7 @@ const getMyBookings = async (req, res, next) => {
       .populate("eventId")
       .populate("ticketId");
 
-    res.status(200).json(new ApiResponse(200, "Bookings fetched", bookings));
+    res.status(200).json(apiResponse(200, "Bookings fetched", bookings));
   } catch (error) {
     next(error);
   }
@@ -174,7 +174,7 @@ const downloadTicket = async (req, res, next) => {
     }
 
     res.status(200).json(
-      new ApiResponse(200, "Ticket download data", {
+      apiResponse(200, "Ticket download data", {
         bookingCode: booking.bookingCode,
         qrCode: booking.qrCode,
       }),
@@ -194,7 +194,7 @@ const getQRCode = async (req, res, next) => {
     }
 
     res.status(200).json(
-      new ApiResponse(200, "QR code fetched", {
+      apiResponse(200, "QR code fetched", {
         qrCode: booking.qrCode,
       }),
     );

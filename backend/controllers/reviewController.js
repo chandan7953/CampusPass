@@ -2,7 +2,7 @@ const Review = require("../models/Review");
 const Event = require("../models/Event");
 const Booking = require("../models/Booking");
 
-const ApiResponse = require("../utils/ApiResponse");
+const apiResponse = require("../utils/apiResponse");
 const ApiError = require("../utils/ApiError");
 
 const addReview = async (req, res, next) => {
@@ -43,7 +43,7 @@ const addReview = async (req, res, next) => {
 
     res
       .status(201)
-      .json(new ApiResponse(201, "Review added successfully", review));
+      .json(apiResponse(201, "Review added successfully", review));
   } catch (error) {
     next(error);
   }
@@ -69,7 +69,7 @@ const updateReview = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Review updated successfully", review));
+      .json(apiResponse(200, "Review updated successfully", review));
   } catch (error) {
     next(error);
   }
@@ -89,7 +89,7 @@ const deleteReview = async (req, res, next) => {
 
     await Review.findByIdAndDelete(req.params.id);
 
-    res.status(200).json(new ApiResponse(200, "Review deleted successfully"));
+    res.status(200).json(apiResponse(200, "Review deleted successfully"));
   } catch (error) {
     next(error);
   }
@@ -107,7 +107,7 @@ const getEventReviews = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Reviews fetched successfully", reviews));
+      .json(apiResponse(200, "Reviews fetched successfully", reviews));
   } catch (error) {
     next(error);
   }
@@ -123,7 +123,7 @@ const getMyReviews = async (req, res, next) => {
         createdAt: -1,
       });
 
-    res.status(200).json(new ApiResponse(200, "My reviews fetched", reviews));
+    res.status(200).json(apiResponse(200, "My reviews fetched", reviews));
   } catch (error) {
     next(error);
   }
@@ -144,7 +144,7 @@ const getEventRating = async (req, res, next) => {
           totalReviews;
 
     res.status(200).json(
-      new ApiResponse(200, "Rating fetched successfully", {
+      apiResponse(200, "Rating fetched successfully", {
         averageRating: Number(averageRating.toFixed(1)),
         totalReviews,
       }),

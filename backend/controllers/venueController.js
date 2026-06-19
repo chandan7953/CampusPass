@@ -1,6 +1,6 @@
 const Venue = require("../models/Venue");
 
-const ApiResponse = require("../utils/ApiResponse");
+const apiResponse = require("../utils/apiResponse");
 const ApiError = require("../utils/ApiError");
 
 const createVenue = async (req, res, next) => {
@@ -17,7 +17,7 @@ const createVenue = async (req, res, next) => {
 
     res
       .status(201)
-      .json(new ApiResponse(201, "Venue created successfully", venue));
+      .json(apiResponse(201, "Venue created successfully", venue));
   } catch (error) {
     next(error);
   }
@@ -35,7 +35,7 @@ const updateVenue = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Venue updated successfully", venue));
+      .json(apiResponse(200, "Venue updated successfully", venue));
   } catch (error) {
     next(error);
   }
@@ -51,7 +51,7 @@ const deleteVenue = async (req, res, next) => {
 
     await Venue.findByIdAndDelete(req.params.id);
 
-    res.status(200).json(new ApiResponse(200, "Venue deleted successfully"));
+    res.status(200).json(apiResponse(200, "Venue deleted successfully"));
   } catch (error) {
     next(error);
   }
@@ -65,7 +65,7 @@ const getAllVenues = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Venues fetched successfully", venues));
+      .json(apiResponse(200, "Venues fetched successfully", venues));
   } catch (error) {
     next(error);
   }
@@ -81,7 +81,7 @@ const getVenueById = async (req, res, next) => {
 
     res
       .status(200)
-      .json(new ApiResponse(200, "Venue fetched successfully", venue));
+      .json(apiResponse(200, "Venue fetched successfully", venue));
   } catch (error) {
     next(error);
   }
