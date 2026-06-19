@@ -1,33 +1,23 @@
-require("dotenv").config();
-
 const express = require("express");
 const cors = require("cors");
-const helmet = require("helmet");
-const compression = require("compression");
 const cookieParser = require("cookie-parser");
-const morgan = require("morgan");
-
-const connectDB = require("./configs/db");
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const venueRoutes = require("./routes/venueRoutes");
-const eventRoutes = require("./routes/eventRoutes.");
+const eventRoutes = require("./routes/eventRoutes");
 const ticketRoutes = require("./routes/ticketRoutes");
-const reviewRoutes = require("./routes/reviewRoutes");
-const paymentRoutes = require("./routes/paymentRoutes");
-
-const notificationRoutes = require("./routes/notificationRoutes");
-
 const bookingRoutes = require("./routes/bookingRoutes");
-const adminRoutes = require("./routes/adminRoutes");
-const errorHandler = require("./middlewares/errorHandler");
+const paymentRoutes = require("./routes/paymentRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 const organizerRoutes = require("./routes/organizerRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+
+const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
-
-connectDB();
 
 app.use(
   cors({
@@ -35,12 +25,6 @@ app.use(
     credentials: true,
   }),
 );
-
-app.use(helmet());
-
-app.use(compression());
-
-app.use(morgan("dev"));
 
 app.use(express.json());
 
@@ -75,16 +59,13 @@ app.use("/api/bookings", bookingRoutes);
 
 app.use("/api/payments", paymentRoutes);
 
-app.use("/api/reviews", reviewRoutes);
+app.use("/api/notifications", notificationRoutes);
 
+app.use("/api/reviews", reviewRoutes);
 
 app.use("/api/organizer", organizerRoutes);
 
-
-app.use("/api/bookings", bookingRoutes);
-app.use("/api/notifications", notificationRoutes);
 app.use("/api/admin", adminRoutes);
-
 
 app.use((req, res) => {
   res.status(404).json({
@@ -95,8 +76,4 @@ app.use((req, res) => {
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-  console.log(`Server Running On Port http://localhost:${PORT}`);
-});
+module.exports = app;
