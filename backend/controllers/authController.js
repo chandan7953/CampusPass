@@ -14,8 +14,7 @@ const ApiError = require("../utils/ApiError");
 
 const registerUser = async (req, res, next) => {
   try {
-    const { fullName, email, mobile, password } = req.body;
-    const role = "student";
+    const { fullName, email, mobile, password, role } = req.body;
     const existingUser = await User.findOne({
       $or: [{ email }, { mobile }],
     });
@@ -57,6 +56,7 @@ const registerUser = async (req, res, next) => {
 
 const loginUser = async (req, res, next) => {
   try {
+    console.log("Login request:");
     const { email, password } = req.body;
 
     const user = await User.findOne({ email }).select("+password");
@@ -114,9 +114,9 @@ const sendOTP = async (req, res, next) => {
     await user.save();
 
     await sendEmail(
-  email,
-  "CampusPass - Email Verification OTP",
-  `
+      email,
+      "CampusPass - Email Verification OTP",
+      `
   <div style="font-family: Arial, sans-serif; background:#f9fafb; padding:20px;">
     
     <div style="max-width:520px; margin:auto; background:#ffffff; padding:25px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.08);">
@@ -161,7 +161,7 @@ const sendOTP = async (req, res, next) => {
     </div>
   </div>
   `
-);
+    );
 
     res.status(200).json(apiResponse(200, "OTP sent successfully"));
   } catch (error) {
@@ -220,9 +220,9 @@ const forgotPassword = async (req, res, next) => {
     await user.save();
 
     await sendEmail(
-  email,
-  "Reset Password OTP - CampusPass",
-  `
+      email,
+      "Reset Password OTP - CampusPass",
+      `
   <div style="font-family: Arial, sans-serif; background:#f4f4f4; padding:20px;">
     
     <div style="max-width:500px; margin:auto; background:#ffffff; padding:25px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
@@ -265,7 +265,7 @@ const forgotPassword = async (req, res, next) => {
     </div>
   </div>
   `
-);
+    );
 
     res.status(200).json(apiResponse(200, "Password reset OTP sent"));
   } catch (error) {
@@ -306,6 +306,7 @@ const resetPassword = async (req, res, next) => {
 const getCurrentUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
+
 
     res.status(200).json(apiResponse(200, "User fetched successfully", user));
   } catch (error) {

@@ -9,38 +9,23 @@ const getDashboardStats = async (req, res, next) => {
   try {
     const organizerId = req.user.id;
 
-    const events = await Event.countDocuments({
-      organizer: organizerId,
+    const myEvents = await Event.find({ organizer: organizerId });
+
+    let totalBookings = 0;
+    let totalRevenue = 0;
+
+    myEvents.forEach(evt => {
+      const booked = Number(evt.bookedSeats) || 0;
+      const price = Number(evt.price) || 0;
+      totalBookings += booked;
+      totalRevenue += booked * price;
     });
-
-    const bookings = await Booking.countDocuments({
-      organizerId,
-    });
-
-    const revenueData = await Payment.aggregate([
-      {
-        $match: {
-          organizerId,
-          status: "paid",
-        },
-      },
-      {
-        $group: {
-          _id: null,
-          totalRevenue: {
-            $sum: "$amount",
-          },
-        },
-      },
-    ]);
-
-    const revenue = revenueData[0]?.totalRevenue || 0;
 
     res.status(200).json(
       apiResponse(200, "Dashboard stats fetched", {
-        totalEvents: events,
-        totalBookings: bookings,
-        totalRevenue: revenue,
+        totalEvents: myEvents.length,
+        totalBookings: totalBookings,
+        totalRevenue: totalRevenue,
       }),
     );
   } catch (error) {
@@ -50,8 +35,14 @@ const getDashboardStats = async (req, res, next) => {
 
 const getRevenueStats = async (req, res, next) => {
   try {
+    const myEvents = await Event.find({ organizer: req.user.id }).select("_id");
+    const eventIds = myEvents.map(e => e._id);
+
+    const bookings = await Booking.find({ eventId: { $in: eventIds } }).select("_id");
+    const bookingIds = bookings.map(b => b._id);
+
     const revenue = await Payment.find({
-      organizerId: req.user.id,
+      bookingId: { $in: bookingIds },
       status: "paid",
     }).sort({
       createdAt: -1,
@@ -92,12 +83,11 @@ const scanTicket = async (req, res, next) => {
       throw new ApiError(404, "Invalid ticket");
     }
 
-    if (booking.isScanned) {
+    if (booking.checkedIn) {
       throw new ApiError(400, "Ticket already used");
     }
 
-    booking.isScanned = true;
-
+    booking.checkedIn = true;
     booking.scannedAt = new Date();
 
     await booking.save();

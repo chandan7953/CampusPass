@@ -31,7 +31,13 @@ const addReview = async (req, res, next) => {
     });
 
     if (existingReview) {
-      throw new ApiError(400, "Review already submitted");
+      existingReview.rating = rating || existingReview.rating;
+      existingReview.comment = comment !== undefined ? comment : existingReview.comment;
+      await existingReview.save();
+
+      return res
+        .status(200)
+        .json(apiResponse(200, "Review updated successfully", existingReview));
     }
 
     const review = await Review.create({
@@ -63,7 +69,7 @@ const updateReview = async (req, res, next) => {
 
     review.rating = req.body.rating || review.rating;
 
-    review.comment = req.body.comment || review.comment;
+    review.comment = req.body.comment !== undefined ? req.body.comment : review.comment;
 
     await review.save();
 
@@ -143,10 +149,19 @@ const getEventRating = async (req, res, next) => {
         : reviews.reduce((sum, review) => sum + review.rating, 0) /
           totalReviews;
 
+    const ratingBreakdown = {
+      5: reviews.filter((r) => r.rating === 5).length,
+      4: reviews.filter((r) => r.rating === 4).length,
+      3: reviews.filter((r) => r.rating === 3).length,
+      2: reviews.filter((r) => r.rating === 2).length,
+      1: reviews.filter((r) => r.rating === 1).length,
+    };
+
     res.status(200).json(
       apiResponse(200, "Rating fetched successfully", {
         averageRating: Number(averageRating.toFixed(1)),
         totalReviews,
+        ratingBreakdown,
       }),
     );
   } catch (error) {

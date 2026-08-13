@@ -1,9 +1,12 @@
 const crypto = require("crypto");
 
+const mongoose = require("mongoose");
 const razorpay = require("../configs/razorpay");
 
 const Payment = require("../models/Payment");
 const Booking = require("../models/Booking");
+const Event = require("../models/Event");
+const Commission = require("../models/Commission");
 
 const apiResponse = require("../utils/apiResponse");
 const ApiError = require("../utils/ApiError");
@@ -16,6 +19,18 @@ const createOrder = async (req, res, next) => {
 
     if (!booking) {
       throw new ApiError(404, "Booking not found");
+    }
+
+    if (booking.userId.toString() !== req.user.id) {
+      throw new ApiError(403, "You are not allowed to pay for this booking");
+    }
+
+    if (booking.paymentStatus === "paid") {
+      throw new ApiError(400, "This booking has already been paid");
+    }
+
+    if (booking.totalAmount === 0) {
+      throw new ApiError(400, "This is a free booking and does not need payment");
     }
 
     const options = {
@@ -42,12 +57,23 @@ const createOrder = async (req, res, next) => {
 
 const verifyPayment = async (req, res, next) => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-      req.body;
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+    } = req.body;
+
+    if (
+      !razorpay_order_id ||
+      !razorpay_payment_id ||
+      !razorpay_signature
+    ) {
+      throw new ApiError(400, "Missing payment details");
+    }
 
     const generatedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-      .update(razorpay_order_id + "|" + razorpay_payment_id)
+      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
       .digest("hex");
 
     if (generatedSignature !== razorpay_signature) {
@@ -62,25 +88,72 @@ const verifyPayment = async (req, res, next) => {
       throw new ApiError(404, "Payment record not found");
     }
 
-    payment.razorpayPaymentId = razorpay_payment_id;
+    if (!payment.userId) {
+      throw new ApiError(
+        500,
+        "Payment record is missing user information"
+      );
+    }
 
+    if (payment.userId.toString() !== req.user.id) {
+      throw new ApiError(
+        403,
+        "You are not allowed to verify this payment"
+      );
+    }
+
+    payment.razorpayPaymentId = razorpay_payment_id;
+    payment.razorpaySignature = razorpay_signature;
     payment.status = "paid";
 
     await payment.save();
 
     const booking = await Booking.findById(payment.bookingId);
 
-    booking.paymentStatus = "paid";
+    if (!booking) {
+      throw new ApiError(404, "Booking not found");
+    }
 
+    if (booking.bookingStatus === "cancelled") {
+      throw new ApiError(400, "Booking expired. Please contact support.");
+    }
+
+    booking.paymentStatus = "paid";
     booking.bookingStatus = "confirmed";
 
     await booking.save();
+
+    // Increment bookedSeats on the Event
+    const event = await Event.findById(booking.eventId);
+    if (event) {
+      event.bookedSeats += booking.quantity;
+      await event.save();
+    }
+
+    // Auto-create Commission record (20% platform, 80% organizer)
+    if (event && booking.totalAmount > 0) {
+      const commissionPercentage = 20;
+      const commissionAmount = (booking.totalAmount * commissionPercentage) / 100;
+      const organizerAmount = booking.totalAmount - commissionAmount;
+
+      await Commission.create({
+        bookingId: booking._id,
+        eventId: booking.eventId,
+        organizerId: event.organizer,
+        paymentId: payment._id,
+        totalAmount: booking.totalAmount,
+        commissionPercentage,
+        commissionAmount,
+        organizerAmount,
+        status: "pending",
+      });
+    }
 
     res.status(200).json(
       apiResponse(200, "Payment verified successfully", {
         payment,
         booking,
-      }),
+      })
     );
   } catch (error) {
     next(error);

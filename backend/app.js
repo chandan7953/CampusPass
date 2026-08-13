@@ -14,17 +14,15 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const organizerRoutes = require("./routes/organizerRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const analyticsRoutes = require("./routes/analyticsRoutes");
+const contactRoutes = require("./routes/contactRoutes");
+const aiRoutes = require("./routes/aiRoutes");
 
 const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
 
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true,
-  }),
-);
+app.use(cors());
 
 app.use(express.json());
 
@@ -66,6 +64,12 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/organizer", organizerRoutes);
 
 app.use("/api/admin", adminRoutes);
+
+app.use("/api/analytics", analyticsRoutes);
+
+app.use("/api/contact", contactRoutes);
+
+app.use("/api/ai", aiRoutes);
 
 app.use((req, res) => {
   res.status(404).json({

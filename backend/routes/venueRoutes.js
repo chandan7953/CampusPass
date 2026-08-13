@@ -2,6 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
+
 const {
   createVenue,
   updateVenue,
@@ -10,18 +11,82 @@ const {
   getVenueById,
 } = require("../controllers/venueController");
 
-const verifyToken = require("../middlewares/verifyToken");
 
-const authorizeRole = require("../middlewares/authorizeRole");
+const verifyToken =
+require("../middlewares/verifyToken");
 
-router.get("/", getAllVenues);
 
-router.get("/:id", getVenueById);
+const authorizeRole =
+require("../middlewares/authorizeRole");
 
-router.post("/", verifyToken, authorizeRole("admin"), createVenue);
 
-router.put("/:id", verifyToken, authorizeRole("admin"), updateVenue);
 
-router.delete("/:id", verifyToken, authorizeRole("admin"), deleteVenue);
+
+// ==========================
+// Public Routes
+// ==========================
+
+
+// Get all active venues
+
+router.get(
+  "/",
+  getAllVenues
+);
+
+
+
+// Get venue details
+
+router.get(
+  "/:id",
+  getVenueById
+);
+
+
+
+
+
+// ==========================
+// Admin Only Routes
+// ==========================
+
+
+
+// Create Venue
+
+router.post(
+  "/",
+  verifyToken,
+  authorizeRole("admin"),
+  createVenue
+);
+
+
+
+
+// Update Venue
+
+router.put(
+  "/:id",
+  verifyToken,
+  authorizeRole("admin"),
+  updateVenue
+);
+
+
+
+
+// Delete Venue
+
+router.delete(
+  "/:id",
+  verifyToken,
+  authorizeRole("admin"),
+  deleteVenue
+);
+
+
+
 
 module.exports = router;

@@ -1,29 +1,67 @@
 const mongoose = require("mongoose");
 
+
 const venueSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
+{
+
+    name:{
+        type:String,
+        required:true,
+        trim:true,
     },
 
-    address: {
-      type: String,
-      required: true,
+
+    address:{
+        type:String,
+        required:true,
+        trim:true,
     },
 
-    collegeName: {
-      type: String,
-      required: true,
+
+    collegeName:{
+        type:String,
+        required:true,
+        trim:true,
     },
 
-    latitude: Number,
 
-    longitude: Number,
-  },
-  {
-    timestamps: true,
-  },
+    capacity:{
+        type:Number,
+        required:true,
+    },
+
+
+    facilities:[
+        {
+            type:String,
+        }
+    ],
+
+
+    latitude:{
+        type:Number,
+    },
+
+
+    longitude:{
+        type:Number,
+    },
+
+
+    isActive:{
+        type:Boolean,
+        default:true,
+    }
+
+},
+{
+    timestamps:true,
+}
 );
 
-module.exports = mongoose.model("Venue", venueSchema);
+
+module.exports =
+mongoose.model(
+"Venue",
+venueSchema
+);
